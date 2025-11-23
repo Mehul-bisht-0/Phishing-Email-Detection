@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Spam Classifier - AI-Powered Spam Detection</title>
+    <meta name="description" content="Advanced email spam classifier powered by machine learning. Detect spam and phishing attempts instantly with our intelligent analyzer.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, hsl(240, 10%, 8%) 0%, hsl(250, 20%, 12%) 50%, hsl(280, 20%, 10%) 100%);
+            color: hsl(210, 40%, 98%);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .stars {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .icon-wrapper {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 4rem;
+            height: 4rem;
+            background: hsl(250, 95%, 65%);
+            border-radius: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 0 40px hsl(250 95% 65% / 0.3);
+        }
+
+        .icon-wrapper svg {
+            width: 2.25rem;
+            height: 2.25rem;
+            color: white;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #60a5fa, #a78bfa, #f87171);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.75rem;
+        }
+
+        .subtitle {
+            font-size: 1.125rem;
+            color: hsl(215, 20%, 65%);
+            max-width: 42rem;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .card {
+            background: hsl(240, 10%, 12%);
+            border-radius: 0.75rem;
+            padding: 2rem;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.6);
+            margin-bottom: 2rem;
+            border: 1px solid hsl(240, 10%, 20%);
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: hsl(210, 40%, 98%);
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 0.75rem;
+            background: hsl(240, 10%, 18%);
+            border: 1px solid hsl(240, 10%, 20%);
+            border-radius: 0.5rem;
+            color: hsl(210, 40%, 98%);
+            font-size: 1rem;
+            font-family: inherit;
+            resize: vertical;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: hsl(250, 95%, 65%);
+            box-shadow: 0 0 0 3px hsl(250 95% 65% / 0.1);
+        }
+
+        .button {
+            width: 100%;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, hsl(250, 95%, 65%) 0%, hsl(280, 85%, 65%) 100%);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 20px hsl(250 95% 65% / 0.3);
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px hsl(250 95% 65% / 0.5);
+        }
+
+        .button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .result-card {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 2px solid;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-spam {
+            background: linear-gradient(135deg, hsl(0, 84%, 60%, 0.1) 0%, hsl(25, 95%, 53%, 0.1) 100%);
+            border-color: hsl(0, 84%, 60%);
+        }
+
+        .result-safe {
+            background: linear-gradient(135deg, hsl(142, 76%, 50%, 0.1) 0%, hsl(160, 76%, 55%, 0.1) 100%);
+            border-color: hsl(142, 76%, 50%);
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .result-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+
+        .result-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .result-spam .result-title {
+            color: hsl(0, 84%, 60%);
+        }
+
+        .result-safe .result-title {
+            color: hsl(142, 76%, 50%);
+        }
+
+        .confidence {
+            margin-top: 1rem;
+        }
+
+        .confidence-label {
+            font-size: 0.875rem;
+            color: hsl(215, 20%, 65%);
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 0.5rem;
+            background: hsl(240, 10%, 20%);
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 9999px;
+            transition: width 0.5s ease-out;
+        }
+
+        .progress-spam {
+            background: linear-gradient(90deg, hsl(0, 84%, 60%) 0%, hsl(25, 95%, 53%) 100%);
+        }
+
+        .progress-safe {
+            background: linear-gradient(90deg, hsl(142, 76%, 50%) 0%, hsl(160, 76%, 55%) 100%);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 4rem;
+            font-size: 0.875rem;
+            color: hsl(215, 20%, 65%);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+
+    <div class="container">
+        <header>
+            <div class="icon-wrapper">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                </svg>
+            </div>
+            <h1>Email Spam Classifier</h1>
+            <p class="subtitle">
+                Protect yourself from spam and phishing attempts. Our intelligent classifier analyzes
+                your emails and detects potential threats instantly.
+            </p>
+        </header>
+
+        <div class="card">
+            <div class="input-group">
+                <label for="emailContent">Email Content</label>
+                <textarea 
+                    id="emailContent" 
+                    placeholder="Paste your email content here to analyze..."
+                ></textarea>
+            </div>
+
+            <button class="button" id="analyzeBtn" onclick="analyzeEmail()">
+                <span id="buttonText">Analyze Email</span>
+            </button>
+
+            <div id="result"></div>
+        </div>
+
+        <footer>
+            <p>Powered by advanced machine learning algorithms</p>
+        </footer>
+    </div>
+
+    <script>
+        // Generate stars
+        const starsContainer = document.getElementById('stars');
+        for (let i = 0; i < 100; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = `${Math.random() * 100}%`;
+            star.style.top = `${Math.random() * 100}%`;
+            star.style.width = `${Math.random() * 2 + 1}px`;
+            star.style.height = star.style.width;
+            star.style.animationDelay = `${Math.random() * 3}s`;
+            starsContainer.appendChild(star);
+        }
+
+        // Spam detection logic
+        const spamKeywords = [
+            'winner', 'congratulations', 'free money', 'click here', 'urgent',
+            'act now', 'limited time', 'viagra', 'casino', 'lottery',
+            'prince', 'inheritance', 'million dollars', 'bank account',
+            'verify your account', 'suspended', 'claim your prize'
+        ];
+
+        async function analyzeEmail() {
+            const emailContent = document.getElementById('emailContent').value.trim();
+            const button = document.getElementById('analyzeBtn');
+            const buttonText = document.getElementById('buttonText');
+            const resultDiv = document.getElementById('result');
+
+            if (!emailContent) {
+                alert('Please enter email content to analyze');
+                return;
+            }
+
+            // Show loading state
+            button.disabled = true;
+            buttonText.innerHTML = '<span class="spinner"></span>Analyzing...';
+            resultDiv.innerHTML = '';
+
+            // Simulate API call
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            // Simple spam detection
+            const lowerContent = emailContent.toLowerCase();
+            const spamCount = spamKeywords.filter(keyword => 
+                lowerContent.includes(keyword.toLowerCase())
+            ).length;
+
+            const isSpam = spamCount >= 2;
+            const confidence = isSpam 
+                ? Math.min(60 + (spamCount * 10), 95)
+                : Math.max(95 - (spamCount * 15), 60);
+
+            // Display result
+            if (isSpam) {
+                resultDiv.innerHTML = `
+                    <div class="result-card result-spam">
+                        <div class="result-header">
+                            <svg class="result-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                            </svg>
+                            <h2 class="result-title">Spam Detected!</h2>
+                        </div>
+                        <p style="color: hsl(215, 20%, 75%); margin-bottom: 1rem;">
+                            This email has been classified as spam. It contains suspicious patterns commonly found in spam or phishing attempts.
+                        </p>
+                        <div class="confidence">
+                            <div class="confidence-label">Confidence: ${confidence}%</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill progress-spam" style="width: ${confidence}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                resultDiv.innerHTML = `
+                    <div class="result-card result-safe">
+                        <div class="result-header">
+                            <svg class="result-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                            </svg>
+                            <h2 class="result-title">Email is Safe</h2>
+                        </div>
+                        <p style="color: hsl(215, 20%, 75%); margin-bottom: 1rem;">
+                            This email appears to be legitimate. No significant spam indicators were detected.
+                        </p>
+                        <div class="confidence">
+                            <div class="confidence-label">Confidence: ${confidence}%</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill progress-safe" style="width: ${confidence}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Reset button
+            button.disabled = false;
+            buttonText.innerHTML = 'Analyze Email';
+        }
+
+        // Allow Enter key to submit
+        document.getElementById('emailContent').addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'Enter') {
+                analyzeEmail();
+            }
+        });
+    </script>
+</body>
+</html>

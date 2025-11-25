@@ -1,46 +1,71 @@
-📧 Phishing Email Detection using Machine Learning & NLP
+# **📧 Phishing Email Detection using Machine Learning & NLP**
 
-A machine learning–powered system for detecting phishing emails, built using TF-IDF vectors, NLP preprocessing, and multiple classification algorithms. The project includes a lightweight, user-friendly Flask web application that allows users to input email text and receive instant predictions.
+A complete machine learning project for detecting phishing emails using TF-IDF vectors, NLP preprocessing, and multiple classification algorithms.
+This repository also includes a Flask-based web application that allows users to paste email text and instantly receive a phishing/legitimate prediction.
 
-🚀 Features
+## 🔍 Overview
 
-TF-IDF Vectorization for converting email text into numerical features
+This project aims to identify phishing emails using machine learning techniques.
+It uses:
 
-NLP Pipeline with tokenization, stopword removal, lemmatization
+**TF-IDF** for text vectorization
 
-Multiple ML Classifiers (Logistic Regression, SVM, Random Forest, Naive Bayes, etc.)
+**NLP** preprocessing for cleaning and transforming text
 
-Model Evaluation with accuracy, precision, recall, F1-score, and confusion matrix
+Multiple ML **Classification models** for comparing performance
 
-Flask Web App for real-time phishing detection
+A simple and intuitive Flask web app for real-time predictions
 
-Clean and modular Python code structure
+## ✨ Features
 
-🧠 Machine Learning Models Used
+✔️ Email text preprocessing (tokenization, lemmatization, stopword removal)
 
-The project experiments with several ML models to compare performance:
+✔️ TF-IDF vectorizer for converting text to numerical features
 
-Logistic Regression
-Support Vector Machine (SVM)
-SGD Classifier
-MLP Classifier
-Random Forest Classifier
-Multinomial Naive Bayes
-Decision Trees
-XGBoost
+✔️ Multiple ML models trained and compared
 
-Each model is trained on TF-IDF features extracted from processed email text.
+✔️ Pre-trained model + vectorizer saved for deployment
 
-🛠️ Technologies Used
+✔️ Flask interface for easy user interaction
+
+✔️ Evaluation metrics and visualizations
+
+## 🧰 Tech Stack
+
+### Languages & Libraries:
 
 Python 3.x
 
 scikit-learn
 
-NLTK / spaCy (for text preprocessing)
+NLTK / spaCy
 
-Flask (backend & web interface)
+Pandas, NumPy
 
-Pandas / NumPy
+Matplotlib / Seaborn
 
-Matplotlib / Seaborn (for evaluation plots)
+### Framework:
+
+Flask
+
+## ▶️ Usage
+### 1. Clone the repository
+```bash
+git clone https://github.com/your-username/phishing-email-detection.git
+cd phishing-email-detection
+```
+
+### 2. Install dependencies
+```
+pip install -r requirements.txt
+```
+
+### 3. Start the Flask app
+```
+python app/app.py
+```
+
+### 4. Open your browser
+```
+http://127.0.0.1:5000/
+```
